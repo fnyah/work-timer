@@ -1,15 +1,30 @@
-import * as React from "react";
-import { Button, View, Text } from "react-native";
+import React, { useState } from "react";
+import { Button, View, Text, FlatList, TouchableOpacity } from "react-native";
 import TimeButton from "../components/TimeButton";
 
 function HomeScreen({ route, navigation }) {
   const minutes = route.params;
-  const timers = []
+  
+  const [timers, setTimers] = useState([
+    { id: 1, minutes: 5 },
+    { id: 2, minutes: 10 },
+  ]);
 
-    // pass minutes as props to timer component 
-    // and add to timers array
+  // function that removes a timer from the timers array by id
+  const removeTimer = (id) => {
+    setTimers((prevTimers) => {
+      return prevTimers.filter((timer) => timer.id != id);
+    });
+  };
 
-
+  const renderItem = ({ item }) => (
+    <View>
+      <TimeButton minutes={item.minutes} />
+      <TouchableOpacity onPress={() => removeTimer(item.id)}>
+        <Text>delete</Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -19,7 +34,11 @@ function HomeScreen({ route, navigation }) {
         onPress={() => navigation.navigate("CreateTimer")}
       />
       {minutes ? <Text>{minutes}</Text> : null}
-    <TimeButton minutes={minutes} />
+      <FlatList
+        keyExtractor={(item) => item.id}
+        data={timers}
+        renderItem={renderItem}
+      />
     </View>
   );
 }
