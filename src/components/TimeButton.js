@@ -1,20 +1,32 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
-const TimeButton = ({ minutes, startCountDown, endCountDown, timeState }) => {
+const TimeButton = ({ minutes }) => {
   const [pressed, setPressed] = useState(false);
 
-  const textValue = "Cancel";
+  console.log(minutes);
 
   const callFuncs = () => {
     if (pressed) {
       console.log(pressed);
       setPressed(false);
-      endCountDown();
     } else {
       startCountDown(minutes);
       setPressed(true);
     }
+  };
+
+  // countdown function taking time as a parameter
+  const startCountDown = (time) => {
+    let timeLeft = time;
+    let interval = setInterval(() => {
+      if (timeLeft > 0) {
+        timeLeft--;
+        console.log(timeLeft);
+      } else {
+        clearInterval(interval);
+      }
+    }, 1000);
   };
 
   return (
@@ -23,10 +35,10 @@ const TimeButton = ({ minutes, startCountDown, endCountDown, timeState }) => {
         <View style={styles.btnBackground}>
           {!pressed ? (
             <Text style={styles.btnText}>{minutes} Minutes</Text>
-          ) : pressed && timeState == 0 ? (
+          ) : pressed && minutes == 0 ? (
             <Text style={styles.btnText}>Reset</Text>
           ) : (
-            <Text style={styles.btnText}>{textValue}</Text>
+            <Text style={styles.btnText}>Cancel</Text>
           )}
         </View>
       </TouchableOpacity>
